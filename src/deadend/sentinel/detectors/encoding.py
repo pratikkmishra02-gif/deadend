@@ -74,7 +74,7 @@ class EncodingDetector(BaseDetector):
         # ROT13
         # It's hard to definitively know if it's ROT13 unless we re-evaluate it with heuristics, 
         # but we can tentatively decode it and see if words emerge, or rely on recursive checking.
-        rot13_decoded = codecs.encode(decoded, 'rot_13')
+        _rot13_decoded = codecs.encode(decoded, 'rot_13')
         # We will keep both variations for the deep scan if needed, but for simplicity here we 
         # won't inline replace it unless requested, as it destroys plaintext.
         # However, if 'rot13' signature was found, it might be worth checking.

@@ -3,6 +3,7 @@ from __future__ import annotations
 import time
 
 from deadend.exceptions import CircuitBreakerOpenError
+from deadend.policy.schema import WardenPolicy
 from deadend.types import (
     ActionType,
     AgentEvent,
@@ -14,7 +15,6 @@ from deadend.types import (
     ThreatSeverity,
     ToolCall,
 )
-from deadend.policy.schema import WardenPolicy
 from deadend.warden.circuit_breaker import CircuitBreaker
 from deadend.warden.monitors.base import BaseMonitor
 from deadend.warden.monitors.coordination import CoordinationMonitor

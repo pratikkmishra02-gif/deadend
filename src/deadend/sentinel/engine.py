@@ -5,6 +5,7 @@ import time
 
 import structlog
 
+from deadend.policy.schema import SentinelPolicy
 from deadend.sentinel.detectors.base import BaseDetector
 from deadend.sentinel.detectors.canary import CanaryDetector
 from deadend.sentinel.detectors.encoding import EncodingDetector
@@ -20,7 +21,6 @@ from deadend.types import (
     SessionContext,
     ThreatSeverity,
 )
-from deadend.policy.schema import SentinelPolicy
 
 logger = structlog.get_logger(__name__)
 

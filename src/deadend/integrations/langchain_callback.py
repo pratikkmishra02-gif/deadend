@@ -28,9 +28,9 @@ from deadend.guardian.engine import GuardianEngine
 from deadend.guardian.validators.code import CodeValidator
 from deadend.guardian.validators.pii import PIIValidator
 from deadend.guardian.validators.secrets import SecretValidator
-from deadend.sentinel.engine import SentinelEngine
 from deadend.policy.loader import PolicyLoader
 from deadend.policy.schema import DeadendPolicy
+from deadend.sentinel.engine import SentinelEngine
 from deadend.types import AgentEvent, SessionContext
 from deadend.warden.engine import WardenEngine
 

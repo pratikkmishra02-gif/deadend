@@ -34,7 +34,7 @@ class ActionExecutor:
         """
         results = []
         for action_type in actions:
-            if action in self.actions:
+            if action_type in self.actions:
                 result = await self.actions[action_type].execute(detection, session)
                 results.append(result)
         return results

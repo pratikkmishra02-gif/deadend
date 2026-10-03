@@ -202,7 +202,7 @@ class SecureOpenAI:
             raise ImportError(
                 "The 'openai' package is required for SecureOpenAI. "
                 "Install it with: pip install deadend[openai]"
-            )
+            ) from None
 
         self._openai_client = openai.OpenAI(**openai_kwargs)
         self._shield = _DeadendShieldLayer(config=deadend_config, mode=deadend_mode)
