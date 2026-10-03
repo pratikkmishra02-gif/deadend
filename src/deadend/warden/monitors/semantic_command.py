@@ -38,7 +38,7 @@ class SemanticCommandMonitor(BaseMonitor):
 
     def __init__(
         self,
-        model_name: str = "Canstralian/CyberAttackDetection",
+        model_name: str = "protectai/deberta-v3-base-prompt-injection-v2",
         threshold: float = 0.80,
     ) -> None:
         super().__init__()
