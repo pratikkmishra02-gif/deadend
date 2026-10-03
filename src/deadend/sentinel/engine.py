@@ -20,20 +20,29 @@ from deadend.types import (
     SessionContext,
     ThreatSeverity,
 )
+from deadend.policy.schema import SentinelPolicy
 
 logger = structlog.get_logger(__name__)
 
 class SentinelEngine:
     """Orchestrates multiple prompt security detectors to evaluate incoming text."""
 
-    def __init__(self, detectors: list[BaseDetector] | None = None, parallel: bool = True):
+    def __init__(
+        self, 
+        detectors: list[BaseDetector] | None = None, 
+        parallel: bool = True,
+        policy: SentinelPolicy | None = None
+    ):
         """Initialize SentinelEngine with a list of detectors.
 
         Args:
             detectors: List of BaseDetector instances. If None, default detectors are used.
             parallel: Whether to run detectors in parallel.
+            policy: Configuration policy for Sentinel.
         """
         self.parallel = parallel
+        self.policy = policy
+        
         if detectors is None:
             self.detectors = {
                 detector.name: detector for detector in [
@@ -48,6 +57,14 @@ class SentinelEngine:
             }
         else:
             self.detectors = {d.name: d for d in detectors}
+            
+        if self.policy:
+            for name, detector in self.detectors.items():
+                det_config = self.policy.detectors.get(name)
+                if det_config:
+                    detector.enabled = det_config.enabled
+                    if hasattr(detector, 'threshold') and det_config.threshold is not None:
+                        detector.threshold = det_config.threshold
 
     def add_detector(self, detector: BaseDetector) -> None:
         """Add a detector to the engine."""

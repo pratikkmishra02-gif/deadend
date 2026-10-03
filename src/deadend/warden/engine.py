@@ -14,6 +14,7 @@ from deadend.types import (
     ThreatSeverity,
     ToolCall,
 )
+from deadend.policy.schema import WardenPolicy
 from deadend.warden.circuit_breaker import CircuitBreaker
 from deadend.warden.monitors.base import BaseMonitor
 from deadend.warden.monitors.coordination import CoordinationMonitor
@@ -33,10 +34,21 @@ __all__ = ["WardenEngine"]
 class WardenEngine:
     """Orchestrates all monitors and circuit breaker."""
     
-    def __init__(self, monitors: list[BaseMonitor] | None = None, circuit_breaker: CircuitBreaker | None = None):
+    def __init__(
+        self, 
+        monitors: list[BaseMonitor] | None = None, 
+        circuit_breaker: CircuitBreaker | None = None,
+        policy: WardenPolicy | None = None
+    ):
+        self.policy = policy
+        
         if monitors is None:
             self.monitors = [
-                ToolAbuseMonitor(),
+                ToolAbuseMonitor(
+                    allowed_tools=policy.allowed_tools if policy else None,
+                    denied_patterns=policy.denied_patterns if policy else None,
+                    detect_phantom_actions=policy.detect_phantom_actions if policy else True
+                ),
                 EscalationMonitor(),
                 ExfiltrationMonitor(),
                 RecursionMonitor(),
@@ -50,6 +62,14 @@ class WardenEngine:
         else:
             self.monitors = monitors
             
+        if self.policy:
+            for monitor in self.monitors:
+                mon_config = self.policy.monitors.get(monitor.name)
+                if mon_config:
+                    monitor.enabled = mon_config.enabled
+                    if hasattr(monitor, 'threshold') and mon_config.threshold is not None:
+                        monitor.threshold = mon_config.threshold
+                        
         self.circuit_breaker = circuit_breaker or CircuitBreaker()
         self.state_machine = AgentStateMachine()
 

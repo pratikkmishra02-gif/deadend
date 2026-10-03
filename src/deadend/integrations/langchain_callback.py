@@ -29,6 +29,8 @@ from deadend.guardian.validators.code import CodeValidator
 from deadend.guardian.validators.pii import PIIValidator
 from deadend.guardian.validators.secrets import SecretValidator
 from deadend.sentinel.engine import SentinelEngine
+from deadend.policy.loader import PolicyLoader
+from deadend.policy.schema import DeadendPolicy
 from deadend.types import AgentEvent, SessionContext
 from deadend.warden.engine import WardenEngine
 
@@ -71,14 +73,17 @@ class DeadendCallbackHandler:
         config: DeadendConfig | None = None,
         mode: str = "enforce",
         on_threat: str = "raise",
+        policy: DeadendPolicy | None = None,
     ) -> None:
         self.mode = mode
         self.on_threat = on_threat
-        self.sentinel = SentinelEngine()
+        self.policy = policy or PolicyLoader.load()
+        
+        self.sentinel = SentinelEngine(policy=self.policy.sentinel)
         self.guardian = GuardianEngine(validators=[
             PIIValidator(), SecretValidator(), CodeValidator()
         ])
-        self.warden = WardenEngine()
+        self.warden = WardenEngine(policy=self.policy.warden)
         self.session = SessionContext()
 
         # Stats
