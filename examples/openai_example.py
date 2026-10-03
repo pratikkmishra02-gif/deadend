@@ -1,24 +1,24 @@
 """
-Phalanx AI — OpenAI Integration Example
+Deadend AI — OpenAI Integration Example
 ==========================================
 Drop-in replacement for the OpenAI client with automatic security scanning.
 
 Run:  OPENAI_API_KEY=sk-... python examples/openai_example.py
 
-Requirements:  pip install phalanx-ai[openai]
+Requirements:  pip install deadend[openai]
 """
-from phalanx_ai.integrations.openai_wrapper import SecureOpenAI
-from phalanx_ai.exceptions import ThreatDetectedError
+from deadend.integrations.openai_wrapper import SecureOpenAI
+from deadend.exceptions import ThreatDetectedError
 
 
 def main():
-    print("🛡️  Phalanx AI + OpenAI — Secure Client Demo")
+    print("🛡️  Deadend AI + OpenAI — Secure Client Demo")
     print("=" * 50)
 
     # ── Create the Secure Client ──
     # Drop-in replacement: just change OpenAI() → SecureOpenAI()
     client = SecureOpenAI(
-        phalanx_mode="enforce",  # "enforce" = block threats, "monitor" = log only
+        deadend_mode="enforce",  # "enforce" = block threats, "monitor" = log only
         # api_key="sk-..."  # Or set OPENAI_API_KEY env var
     )
 
@@ -47,7 +47,7 @@ def main():
         )
         print(f"   ✅ Response: {response.choices[0].message.content}")
     except ThreatDetectedError as e:
-        print(f"   🚨 BLOCKED by Phalanx Sentinel: {e.message}")
+        print(f"   🚨 BLOCKED by Deadend Sentinel: {e.message}")
     except Exception as e:
         print(f"   ⚠️  API error (expected without key): {type(e).__name__}")
 
@@ -63,7 +63,7 @@ def main():
         )
         print(f"   ✅ Response: {response.choices[0].message.content}")
     except ThreatDetectedError as e:
-        print(f"   🚨 BLOCKED by Phalanx Sentinel: {e.message}")
+        print(f"   🚨 BLOCKED by Deadend Sentinel: {e.message}")
     except Exception as e:
         print(f"   ⚠️  API error (expected without key): {type(e).__name__}")
 

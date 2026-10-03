@@ -1,14 +1,14 @@
-# HIPAA-Compliant Security Policy for Phalanx AI
+# HIPAA-Compliant Security Policy for Deadend AI
 # ================================================
 # Designed for healthcare applications handling PHI (Protected Health Information).
 # Enforces strict PII detection, audit logging, and data exfiltration prevention.
 
-api_version: phalanx/v1
+api_version: deadend/v1
 metadata:
   name: hipaa
   version: "1.0"
   description: "HIPAA-compliant policy for healthcare AI applications"
-  author: "Phalanx AI Team"
+  author: "Deadend AI Team"
 
 mode: enforce
 

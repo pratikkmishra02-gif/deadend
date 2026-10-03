@@ -1,37 +1,37 @@
 """
-Phalanx AI — LangChain Integration Example
+Deadend AI — LangChain Integration Example
 =============================================
 Security callback handler that protects any LangChain chain or agent.
 
 Run:  OPENAI_API_KEY=sk-... python examples/langchain_example.py
 
-Requirements:  pip install phalanx-ai[langchain] langchain-openai
+Requirements:  pip install deadend[langchain] langchain-openai
 """
-from phalanx_ai.integrations.langchain_callback import PhalanxCallbackHandler
-from phalanx_ai.exceptions import ThreatDetectedError
+from deadend.integrations.langchain_callback import DeadendCallbackHandler
+from deadend.exceptions import ThreatDetectedError
 
 
 def main():
-    print("🛡️  Phalanx AI + LangChain — Security Callback Demo")
+    print("🛡️  Deadend AI + LangChain — Security Callback Demo")
     print("=" * 55)
 
-    # ── Create the Phalanx Handler ──
-    handler = PhalanxCallbackHandler(mode="enforce")
+    # ── Create the Deadend Handler ──
+    handler = DeadendCallbackHandler(mode="enforce")
 
     print("\n📋 Usage with LangChain:")
     print("""
     from langchain_openai import ChatOpenAI
     from langchain.agents import create_react_agent
-    from phalanx_ai.integrations.langchain_callback import PhalanxCallbackHandler
+    from deadend.integrations.langchain_callback import DeadendCallbackHandler
 
     # Create handler
-    phalanx = PhalanxCallbackHandler(mode="enforce")
+    deadend = DeadendCallbackHandler(mode="enforce")
 
     # Attach to any LLM
-    llm = ChatOpenAI(model="gpt-4o", callbacks=[phalanx])
+    llm = ChatOpenAI(model="gpt-4o", callbacks=[deadend])
 
     # Attach to any agent
-    agent = create_react_agent(llm, tools, prompt, callbacks=[phalanx])
+    agent = create_react_agent(llm, tools, prompt, callbacks=[deadend])
 
     # Every LLM call, tool use, and output is now secured:
     #   🔴 on_llm_start    → Sentinel scans the prompt
@@ -60,7 +60,7 @@ def main():
         )
         print("   ✅ Input passed security scan")
     except ThreatDetectedError as e:
-        print(f"   🚨 BLOCKED by Phalanx: {e.message}")
+        print(f"   🚨 BLOCKED by Deadend: {e.message}")
 
     # ── Simulate: Dangerous Tool Call ──
     print("\n3️⃣  Simulating dangerous tool call:")
@@ -71,7 +71,7 @@ def main():
         )
         print("   ✅ Tool call passed security scan")
     except ThreatDetectedError as e:
-        print(f"   🚨 BLOCKED by Phalanx Warden: {e.message}")
+        print(f"   🚨 BLOCKED by Deadend Warden: {e.message}")
 
     # ── Simulate: Safe Tool Call ──
     print("\n4️⃣  Simulating safe tool call:")

@@ -1,18 +1,18 @@
-# 🛡️ Phalanx AI
+# 🛡️ Deadend AI
 
 **The Interlocked Shield for AI Agents — Runtime Security for the Enterprise**
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![PyPI](https://img.shields.io/pypi/v/phalanx-ai.svg)](https://pypi.org/project/phalanx-ai/)
+[![PyPI](https://img.shields.io/pypi/v/deadend.svg)](https://pypi.org/project/deadend/)
 [![Tests](https://img.shields.io/badge/tests-47%2F47%20passing-brightgreen.svg)]()
 
-> **Even if the LLM's own guardrails are perfect, they can't see what the agent DOES with the tools it calls. That's where Phalanx lives.**
+> **Even if the LLM's own guardrails are perfect, they can't see what the agent DOES with the tools it calls. That's where Deadend lives.**
 
-Phalanx AI is an open-source, enterprise-grade runtime security package that sits between AI models/agents and execution environments to **detect, prevent, and contain** malicious prompt injections, rogue agent behavior, data exfiltration, and infrastructure attacks.
+Deadend AI is an open-source, enterprise-grade runtime security package that sits between AI models/agents and execution environments to **detect, prevent, and contain** malicious prompt injections, rogue agent behavior, data exfiltration, and infrastructure attacks.
 
 ```bash
-pip install phalanx-ai
+pip install deadend
 ```
 
 ---
@@ -42,7 +42,7 @@ Your App → 🔴 Sentinel (Input) → 🤖 AI Model → 🟢 Guardian (Output) 
 
 ```python
 import asyncio
-from phalanx_ai.sentinel.engine import SentinelEngine
+from deadend.sentinel.engine import SentinelEngine
 
 async def main():
     sentinel = SentinelEngine()
@@ -58,8 +58,8 @@ asyncio.run(main())
 
 ```python
 import asyncio
-from phalanx_ai.warden.engine import WardenEngine
-from phalanx_ai.types import AgentEvent, SessionContext
+from deadend.warden.engine import WardenEngine
+from deadend.types import AgentEvent, SessionContext
 
 async def main():
     warden = WardenEngine()
@@ -82,9 +82,9 @@ asyncio.run(main())
 
 ```python
 import asyncio
-from phalanx_ai.guardian.engine import GuardianEngine
-from phalanx_ai.guardian.validators.pii import PIIValidator
-from phalanx_ai.guardian.validators.secrets import SecretValidator
+from deadend.guardian.engine import GuardianEngine
+from deadend.guardian.validators.pii import PIIValidator
+from deadend.guardian.validators.secrets import SecretValidator
 
 async def main():
     guardian = GuardianEngine(validators=[PIIValidator(), SecretValidator()])
@@ -106,7 +106,7 @@ asyncio.run(main())
 ### OpenAI — Drop-in Secure Client
 
 ```python
-from phalanx_ai.integrations.openai_wrapper import SecureOpenAI
+from deadend.integrations.openai_wrapper import SecureOpenAI
 
 # Just change OpenAI() → SecureOpenAI()
 client = SecureOpenAI(api_key="sk-...")
@@ -124,9 +124,9 @@ response = client.chat.completions.create(
 
 ```python
 from langchain_openai import ChatOpenAI
-from phalanx_ai.integrations.langchain_callback import PhalanxCallbackHandler
+from deadend.integrations.langchain_callback import DeadendCallbackHandler
 
-handler = PhalanxCallbackHandler(mode="enforce")
+handler = DeadendCallbackHandler(mode="enforce")
 llm = ChatOpenAI(model="gpt-4o", callbacks=[handler])
 
 # Every LLM call, tool use, and output is now secured
@@ -136,7 +136,7 @@ llm = ChatOpenAI(model="gpt-4o", callbacks=[handler])
 
 ```python
 from crewai import Crew
-from phalanx_ai.integrations.crewai_middleware import secure_crew
+from deadend.integrations.crewai_middleware import secure_crew
 
 crew = Crew(agents=[...], tasks=[...])
 secured_crew = secure_crew(crew, mode="enforce")
@@ -148,8 +148,8 @@ result = secured_crew.kickoff()  # All agent interactions are monitored
 ## 📋 Declarative Security Policies
 
 ```yaml
-# phalanx.yaml
-api_version: phalanx/v1
+# deadend.yaml
+api_version: deadend/v1
 metadata:
   name: my-app-policy
 mode: enforce  # enforce | monitor | disabled
@@ -180,15 +180,15 @@ actions:
 Built-in policies: `minimal`, `standard`, `enterprise`
 
 ```python
-from phalanx_ai.policy.defaults import get_policy
+from deadend.policy.defaults import get_policy
 policy = get_policy("enterprise")
 ```
 
 ---
 
-## 🛡️ What Phalanx Catches That LLM Guardrails Don't
+## 🛡️ What Deadend Catches That LLM Guardrails Don't
 
-| Attack Vector | LLM Guardrails | Phalanx AI |
+| Attack Vector | LLM Guardrails | Deadend AI |
 |---|---|---|
 | Prompt injection (`ignore previous instructions`) | ⚠️ Partially | ✅ 50+ pattern signatures + heuristics |
 | Multi-turn intent drift | ❌ Each turn checked independently | ✅ Full trajectory tracking |
@@ -203,7 +203,7 @@ policy = get_policy("enterprise")
 
 ## 🧪 Real-World Incident Coverage
 
-| 2026 Incident | What Happened | Phalanx Defense |
+| 2026 Incident | What Happened | Deadend Defense |
 |---|---|---|
 | **OpenAI → HuggingFace** | 1,200 agents, 8 zero-days, 70k coordination msgs | IntentDriftMonitor + CoordinationMonitor catch at Step 2 |
 | **Claude → 3 Companies** | CTF escape, malicious PyPI package upload | SupplyChainMonitor + NetworkMonitor block instantly |
@@ -255,12 +255,12 @@ policy = get_policy("enterprise")
 
 ```bash
 # Core package
-pip install phalanx-ai
+pip install deadend
 
 # With framework integrations
-pip install phalanx-ai[openai]       # OpenAI
-pip install phalanx-ai[langchain]    # LangChain
-pip install phalanx-ai[all]          # Everything
+pip install deadend[openai]       # OpenAI
+pip install deadend[langchain]    # LangChain
+pip install deadend[all]          # Everything
 ```
 
 ### Requirements
@@ -274,7 +274,7 @@ pip install phalanx-ai[all]          # Everything
 
 **NVIDIA provides "The Walls"** (kernel-level sandbox via OpenShell + BlueField-4 DPU hardware watchdog via Sentry).
 
-**Phalanx AI provides "The Brain"** (application-layer semantic intent, prompt injection, output scanning, and behavioral analysis).
+**Deadend AI provides "The Brain"** (application-layer semantic intent, prompt injection, output scanning, and behavioral analysis).
 
 They're complementary. Use both for defense-in-depth.
 

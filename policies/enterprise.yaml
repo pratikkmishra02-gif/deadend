@@ -1,4 +1,4 @@
-api_version: phalanx/v1
+api_version: deadend/v1
 metadata:
   name: enterprise
   description: Strict enterprise policy

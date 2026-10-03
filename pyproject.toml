@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "deadend"
-version = "0.1.0"
+version = "0.2.0"
 description = "Runtime AI security for the enterprise — the interlocked shield for AI agents"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -40,10 +40,10 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/pratikkmishra02-gif/phalanx-ai"
-Repository = "https://github.com/pratikkmishra02-gif/phalanx-ai"
-Issues = "https://github.com/pratikkmishra02-gif/phalanx-ai/issues"
-Documentation = "https://github.com/pratikkmishra02-gif/phalanx-ai#readme"
+Homepage = "https://github.com/pratikkmishra02-gif/deadend"
+Repository = "https://github.com/pratikkmishra02-gif/deadend"
+Issues = "https://github.com/pratikkmishra02-gif/deadend/issues"
+Documentation = "https://github.com/pratikkmishra02-gif/deadend#readme"
 
 [project.optional-dependencies]
 ml = ["scikit-learn", "sentence-transformers"]
@@ -61,10 +61,10 @@ all = [
 dev = ["pytest>=7.0", "pytest-asyncio>=0.21", "pytest-cov>=4.0", "ruff>=0.4"]
 
 [project.scripts]
-phalanx = "phalanx_ai.cli.main:app"
+deadend = "deadend.cli.main:app"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/phalanx_ai"]
+packages = ["src/deadend"]
 
 [tool.ruff]
 line-length = 100

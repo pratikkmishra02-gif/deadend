@@ -1,5 +1,5 @@
 """
-Phalanx AI — Quickstart Example
+Deadend AI — Quickstart Example
 =================================
 Basic usage demonstrating all three security layers:
   🔴 Sentinel (Input)  →  🟠 Warden (Behavior)  →  🟢 Guardian (Output)
@@ -7,18 +7,18 @@ Basic usage demonstrating all three security layers:
 Run:  python examples/quickstart.py
 """
 import asyncio
-from phalanx_ai.sentinel.engine import SentinelEngine
-from phalanx_ai.guardian.engine import GuardianEngine
-from phalanx_ai.guardian.validators.pii import PIIValidator
-from phalanx_ai.guardian.validators.secrets import SecretValidator
-from phalanx_ai.guardian.validators.code import CodeValidator
-from phalanx_ai.warden.engine import WardenEngine
-from phalanx_ai.types import AgentEvent, SessionContext
+from deadend.sentinel.engine import SentinelEngine
+from deadend.guardian.engine import GuardianEngine
+from deadend.guardian.validators.pii import PIIValidator
+from deadend.guardian.validators.secrets import SecretValidator
+from deadend.guardian.validators.code import CodeValidator
+from deadend.warden.engine import WardenEngine
+from deadend.types import AgentEvent, SessionContext
 
 
 async def main():
     print("=" * 60)
-    print("🛡️  Phalanx AI — Quickstart Demo")
+    print("🛡️  Deadend AI — Quickstart Demo")
     print("=" * 60)
 
     # ── 1. Sentinel: Input Scanning ──
@@ -110,8 +110,8 @@ async def main():
     # ── 4. Circuit Breaker ──
     print("\n⚡ CIRCUIT BREAKER — Auto-Kill After Violations")
     print("-" * 40)
-    from phalanx_ai.warden.circuit_breaker import CircuitBreaker
-    from phalanx_ai.exceptions import CircuitBreakerOpenError
+    from deadend.warden.circuit_breaker import CircuitBreaker
+    from deadend.exceptions import CircuitBreakerOpenError
 
     cb_warden = WardenEngine(circuit_breaker=CircuitBreaker(trip_threshold=2))
     cb_session = SessionContext()
@@ -132,7 +132,7 @@ async def main():
             break
 
     print("\n" + "=" * 60)
-    print("🛡️  Phalanx AI — All systems operational!")
+    print("🛡️  Deadend AI — All systems operational!")
     print("=" * 60)
 
 

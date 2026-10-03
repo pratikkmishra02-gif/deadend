@@ -1,14 +1,14 @@
-# PCI-DSS Compliant Security Policy for Phalanx AI
+# PCI-DSS Compliant Security Policy for Deadend AI
 # ===================================================
 # Designed for fintech/payment applications handling cardholder data.
 # Enforces strict secret detection, credit card masking, and network isolation.
 
-api_version: phalanx/v1
+api_version: deadend/v1
 metadata:
   name: pci-dss
   version: "1.0"
   description: "PCI-DSS compliant policy for payment and fintech AI applications"
-  author: "Phalanx AI Team"
+  author: "Deadend AI Team"
 
 mode: enforce
 
