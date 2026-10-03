@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from .engine import SentinelEngine
 from .detectors.base import BaseDetector
+from .engine import SentinelEngine
 
 __all__ = [
     "SentinelEngine",

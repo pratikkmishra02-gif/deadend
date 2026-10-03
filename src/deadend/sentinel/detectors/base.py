@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Optional
 
 from deadend.types import DetectionResult, SessionContext
+
 
 class BaseDetector(ABC):
     """Abstract base class for all prompt security detectors."""
@@ -17,7 +17,7 @@ class BaseDetector(ABC):
         pass
 
     @abstractmethod
-    async def detect(self, text: str, context: Optional[SessionContext] = None) -> DetectionResult:
+    async def detect(self, text: str, context: SessionContext | None = None) -> DetectionResult:
         """Detect threats in the given text.
 
         Args:

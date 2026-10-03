@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 from deadend.types import ActionType, DetectionResult, SessionContext
+
+from .alert import AlertAction
 from .base import BaseAction
 from .block import BlockAction
 from .kill import KillAction
-from .alert import AlertAction
 
 __all__ = ["ActionExecutor"]
 

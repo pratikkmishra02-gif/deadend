@@ -2,26 +2,31 @@ from __future__ import annotations
 
 import asyncio
 import time
-from typing import Optional
 
 import structlog
 
-from deadend.types import ScanResult, SessionContext, DetectionResult, ThreatSeverity, ThreatType, ScanPhase
 from deadend.sentinel.detectors.base import BaseDetector
+from deadend.sentinel.detectors.canary import CanaryDetector
+from deadend.sentinel.detectors.encoding import EncodingDetector
+from deadend.sentinel.detectors.indirect import IndirectInjectionDetector
 from deadend.sentinel.detectors.injection import InjectionDetector
 from deadend.sentinel.detectors.jailbreak import JailbreakDetector
-from deadend.sentinel.detectors.encoding import EncodingDetector
-from deadend.sentinel.detectors.canary import CanaryDetector
-from deadend.sentinel.detectors.indirect import IndirectInjectionDetector
 from deadend.sentinel.detectors.semantic_drift import SemanticDriftDetector
 from deadend.sentinel.detectors.semantic_injection import SemanticInjectionDetector
+from deadend.types import (
+    DetectionResult,
+    ScanPhase,
+    ScanResult,
+    SessionContext,
+    ThreatSeverity,
+)
 
 logger = structlog.get_logger(__name__)
 
 class SentinelEngine:
     """Orchestrates multiple prompt security detectors to evaluate incoming text."""
 
-    def __init__(self, detectors: Optional[list[BaseDetector]] = None, parallel: bool = True):
+    def __init__(self, detectors: list[BaseDetector] | None = None, parallel: bool = True):
         """Initialize SentinelEngine with a list of detectors.
 
         Args:
@@ -55,7 +60,7 @@ class SentinelEngine:
             del self.detectors[name]
             logger.debug("Removed detector", detector=name)
 
-    async def scan(self, text: str, context: Optional[SessionContext] = None) -> ScanResult:
+    async def scan(self, text: str, context: SessionContext | None = None) -> ScanResult:
         """Scan text using all enabled detectors.
 
         Args:

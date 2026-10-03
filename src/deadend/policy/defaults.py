@@ -1,11 +1,17 @@
 from __future__ import annotations
 
+from deadend.exceptions import PolicyError
 from deadend.policy.models import (
-    SecurityPolicy, PolicyMetadata, SentinelPolicy, WardenPolicy, 
-    GuardianPolicy, ActionPolicy, NetworkPolicy, ResourcePolicy
+    ActionPolicy,
+    GuardianPolicy,
+    NetworkPolicy,
+    PolicyMetadata,
+    ResourcePolicy,
+    SecurityPolicy,
+    SentinelPolicy,
+    WardenPolicy,
 )
 from deadend.types import ActionType
-from deadend.exceptions import PolicyError
 
 MINIMAL_POLICY = SecurityPolicy(
     metadata=PolicyMetadata(name="minimal", description="Minimal relaxed policy"),

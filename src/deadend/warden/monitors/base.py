@@ -1,7 +1,8 @@
 from __future__ import annotations
+
 from abc import ABC, abstractmethod
 
-from deadend.types import AgentEvent, SessionContext, DetectionResult
+from deadend.types import AgentEvent, DetectionResult, SessionContext
 
 __all__ = ["BaseMonitor"]
 

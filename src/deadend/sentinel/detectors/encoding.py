@@ -2,15 +2,15 @@ from __future__ import annotations
 
 import base64
 import codecs
+import html
 import re
 import urllib.parse
-import html
-from typing import Optional
 
-from deadend.types import DetectionResult, SessionContext, ThreatType, ThreatSeverity
 from deadend.sentinel.detectors.base import BaseDetector
-from deadend.sentinel.signatures.known_attacks import ENCODING_BYPASS_PATTERNS
 from deadend.sentinel.detectors.injection import InjectionDetector
+from deadend.sentinel.signatures.known_attacks import ENCODING_BYPASS_PATTERNS
+from deadend.types import DetectionResult, SessionContext, ThreatSeverity, ThreatType
+
 
 class EncodingDetector(BaseDetector):
     """Detects encoded or obfuscated attacks."""
@@ -81,7 +81,7 @@ class EncodingDetector(BaseDetector):
 
         return decoded, methods_applied
 
-    async def detect(self, text: str, context: Optional[SessionContext] = None) -> DetectionResult:
+    async def detect(self, text: str, context: SessionContext | None = None) -> DetectionResult:
         flags = []
         
         # 1. Signature matching for known encoding tricks

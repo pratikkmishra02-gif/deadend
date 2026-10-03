@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Optional
 
 from deadend.types import DetectionResult, SessionContext
 
@@ -20,7 +19,7 @@ class BaseValidator(ABC):
         pass
 
     @abstractmethod
-    async def validate(self, text: str, context: Optional[SessionContext] = None) -> DetectionResult:
+    async def validate(self, text: str, context: SessionContext | None = None) -> DetectionResult:
         """
         Validate text to check for threats or violations.
 

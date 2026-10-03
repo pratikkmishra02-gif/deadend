@@ -1,7 +1,8 @@
 from __future__ import annotations
+
 import re
 
-from deadend.types import AgentEvent, SessionContext, DetectionResult, ThreatSeverity, ThreatType
+from deadend.types import AgentEvent, DetectionResult, SessionContext, ThreatSeverity, ThreatType
 from deadend.warden.monitors.base import BaseMonitor
 
 __all__ = ["EscalationMonitor"]

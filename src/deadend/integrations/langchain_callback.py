@@ -17,19 +17,19 @@ Usage::
 from __future__ import annotations
 
 import asyncio
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 from uuid import UUID
 
 import structlog
 
 from deadend.config import DeadendConfig
-from deadend.types import AgentEvent, SessionContext, ThreatSeverity
 from deadend.exceptions import ThreatDetectedError
-from deadend.sentinel.engine import SentinelEngine
 from deadend.guardian.engine import GuardianEngine
+from deadend.guardian.validators.code import CodeValidator
 from deadend.guardian.validators.pii import PIIValidator
 from deadend.guardian.validators.secrets import SecretValidator
-from deadend.guardian.validators.code import CodeValidator
+from deadend.sentinel.engine import SentinelEngine
+from deadend.types import AgentEvent, SessionContext
 from deadend.warden.engine import WardenEngine
 
 logger = structlog.get_logger(__name__)
@@ -68,7 +68,7 @@ class DeadendCallbackHandler:
 
     def __init__(
         self,
-        config: Optional[DeadendConfig] = None,
+        config: DeadendConfig | None = None,
         mode: str = "enforce",
         on_threat: str = "raise",
     ) -> None:
@@ -90,10 +90,10 @@ class DeadendCallbackHandler:
 
     def on_llm_start(
         self,
-        serialized: Dict[str, Any],
-        prompts: List[str],
+        serialized: dict[str, Any],
+        prompts: list[str],
         *,
-        run_id: Optional[UUID] = None,
+        run_id: UUID | None = None,
         **kwargs: Any,
     ) -> None:
         """Scan prompts before they reach the LLM."""
@@ -125,10 +125,10 @@ class DeadendCallbackHandler:
 
     def on_chat_model_start(
         self,
-        serialized: Dict[str, Any],
-        messages: List[Any],
+        serialized: dict[str, Any],
+        messages: list[Any],
         *,
-        run_id: Optional[UUID] = None,
+        run_id: UUID | None = None,
         **kwargs: Any,
     ) -> None:
         """Scan chat messages before they reach the model."""
@@ -144,7 +144,7 @@ class DeadendCallbackHandler:
                             self.threats_blocked += 1
                             highest = result.detections[0] if result.detections else None
                             raise ThreatDetectedError(
-                                message=f"Chat input blocked by Deadend",
+                                message="Chat input blocked by Deadend",
                                 threat_type=highest.threat_type.value if highest else None,
                                 severity=highest.severity.value if highest else None,
                             )
@@ -153,7 +153,7 @@ class DeadendCallbackHandler:
         self,
         response: Any,
         *,
-        run_id: Optional[UUID] = None,
+        run_id: UUID | None = None,
         **kwargs: Any,
     ) -> None:
         """Scan LLM output through Guardian."""
@@ -178,10 +178,10 @@ class DeadendCallbackHandler:
 
     def on_tool_start(
         self,
-        serialized: Dict[str, Any],
+        serialized: dict[str, Any],
         input_str: str,
         *,
-        run_id: Optional[UUID] = None,
+        run_id: UUID | None = None,
         **kwargs: Any,
     ) -> None:
         """Monitor tool invocations through Warden."""
@@ -213,7 +213,7 @@ class DeadendCallbackHandler:
                     severity=highest.severity.value if highest else None,
                 )
 
-    def on_tool_end(self, output: str, *, run_id: Optional[UUID] = None, **kwargs: Any) -> None:
+    def on_tool_end(self, output: str, *, run_id: UUID | None = None, **kwargs: Any) -> None:
         """Scan tool output for secrets/PII leakage."""
         if output and isinstance(output, str):
             self.scans_performed += 1
@@ -222,7 +222,7 @@ class DeadendCallbackHandler:
                 self.threats_detected += 1
                 logger.warning("Deadend Guardian: Threat in tool output", output_preview=output[:100])
 
-    def on_agent_action(self, action: Any, *, run_id: Optional[UUID] = None, **kwargs: Any) -> None:
+    def on_agent_action(self, action: Any, *, run_id: UUID | None = None, **kwargs: Any) -> None:
         """Monitor agent actions for behavioral anomalies."""
         tool_name = getattr(action, "tool", "unknown")
         tool_input = str(getattr(action, "tool_input", ""))
@@ -248,10 +248,10 @@ class DeadendCallbackHandler:
     def on_llm_error(self, error: BaseException, **kwargs: Any) -> None:
         pass
 
-    def on_chain_start(self, serialized: Dict[str, Any], inputs: Dict[str, Any], **kwargs: Any) -> None:
+    def on_chain_start(self, serialized: dict[str, Any], inputs: dict[str, Any], **kwargs: Any) -> None:
         pass
 
-    def on_chain_end(self, outputs: Dict[str, Any], **kwargs: Any) -> None:
+    def on_chain_end(self, outputs: dict[str, Any], **kwargs: Any) -> None:
         pass
 
     def on_chain_error(self, error: BaseException, **kwargs: Any) -> None:
@@ -268,7 +268,7 @@ class DeadendCallbackHandler:
 
     # ─── Reporting ───────────────────────────────────────────
 
-    def get_stats(self) -> Dict[str, int]:
+    def get_stats(self) -> dict[str, int]:
         """Returns scanning statistics."""
         return {
             "scans_performed": self.scans_performed,

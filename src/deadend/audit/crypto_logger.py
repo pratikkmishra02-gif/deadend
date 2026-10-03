@@ -3,8 +3,8 @@ from __future__ import annotations
 import hashlib
 import json
 
-from .logger import AuditLogger
 from .events import AuditEvent
+from .logger import AuditLogger
 
 __all__ = ["CryptoAuditLogger"]
 

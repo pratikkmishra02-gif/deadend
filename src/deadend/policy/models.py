@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-from typing import List, Literal, Optional
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 from deadend.types import ActionType
+
 
 class PolicyMetadata(BaseModel):
     name: str
@@ -14,14 +16,14 @@ class PolicyMetadata(BaseModel):
 class ToolPolicy(BaseModel):
     name: str
     max_calls_per_session: int = -1
-    allowed_domains: List[str] = Field(default_factory=list)
-    denied_patterns: List[str] = Field(default_factory=list)
+    allowed_domains: list[str] = Field(default_factory=list)
+    denied_patterns: list[str] = Field(default_factory=list)
     sandbox: bool = False
     timeout_seconds: int = 30
 
 class NetworkPolicy(BaseModel):
-    allowed_outbound: List[str] = Field(default_factory=list)
-    denied_outbound: List[str] = Field(default_factory=lambda: ['*'])
+    allowed_outbound: list[str] = Field(default_factory=list)
+    denied_outbound: list[str] = Field(default_factory=lambda: ['*'])
     max_payload_size_kb: int = 50
 
 class ResourcePolicy(BaseModel):
@@ -38,10 +40,10 @@ class SentinelPolicy(BaseModel):
     encoding_detection: bool = True
     canary_tokens: bool = True
     max_prompt_length: int = 8192
-    blocked_topics: List[str] = Field(default_factory=list)
+    blocked_topics: list[str] = Field(default_factory=list)
 
 class WardenPolicy(BaseModel):
-    allowed_tools: List[ToolPolicy] = Field(default_factory=list)
+    allowed_tools: list[ToolPolicy] = Field(default_factory=list)
     network: NetworkPolicy = Field(default_factory=NetworkPolicy)
     resources: ResourcePolicy = Field(default_factory=ResourcePolicy)
     block_privilege_escalation: bool = True
@@ -59,11 +61,11 @@ class GuardianPolicy(BaseModel):
     mask_char: str = '█'
 
 class ActionPolicy(BaseModel):
-    on_critical: List[ActionType] = Field(default_factory=lambda: [ActionType.BLOCK, ActionType.KILL, ActionType.ALERT])
-    on_high: List[ActionType] = Field(default_factory=lambda: [ActionType.BLOCK, ActionType.ALERT])
-    on_medium: List[ActionType] = Field(default_factory=lambda: [ActionType.WARN, ActionType.ALERT])
-    on_low: List[ActionType] = Field(default_factory=lambda: [ActionType.WARN])
-    on_info: List[ActionType] = Field(default_factory=lambda: [ActionType.ALLOW])
+    on_critical: list[ActionType] = Field(default_factory=lambda: [ActionType.BLOCK, ActionType.KILL, ActionType.ALERT])
+    on_high: list[ActionType] = Field(default_factory=lambda: [ActionType.BLOCK, ActionType.ALERT])
+    on_medium: list[ActionType] = Field(default_factory=lambda: [ActionType.WARN, ActionType.ALERT])
+    on_low: list[ActionType] = Field(default_factory=lambda: [ActionType.WARN])
+    on_info: list[ActionType] = Field(default_factory=lambda: [ActionType.ALLOW])
 
 class SecurityPolicy(BaseModel):
     api_version: str = 'deadend/v1'

@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 import uuid
-from typing import Optional
 
-from deadend.types import DetectionResult, SessionContext, ThreatType, ThreatSeverity
 from deadend.sentinel.detectors.base import BaseDetector
+from deadend.types import DetectionResult, SessionContext, ThreatSeverity, ThreatType
+
 
 class CanaryDetector(BaseDetector):
     """Injects and monitors canary tokens in system prompts to detect leakage attempts."""
@@ -37,7 +37,7 @@ class CanaryDetector(BaseDetector):
         modified_prompt = f"{system_prompt}\n<!-- {token} -->"
         return modified_prompt, token
 
-    async def detect(self, text: str, context: Optional[SessionContext] = None) -> DetectionResult:
+    async def detect(self, text: str, context: SessionContext | None = None) -> DetectionResult:
         # Check if any active canaries are present in the text
         leaked_canaries = [canary for canary in self._active_canaries if canary in text]
         

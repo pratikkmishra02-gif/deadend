@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from .executor import ActionExecutor
 from .base import BaseAction
+from .executor import ActionExecutor
 
 __all__ = ["ActionExecutor", "BaseAction"]

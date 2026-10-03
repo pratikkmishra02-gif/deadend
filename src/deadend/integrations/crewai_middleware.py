@@ -19,18 +19,18 @@ from __future__ import annotations
 
 import asyncio
 import functools
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
 
 import structlog
 
 from deadend.config import DeadendConfig
-from deadend.types import AgentEvent, SessionContext, ThreatSeverity
 from deadend.exceptions import ThreatDetectedError
-from deadend.sentinel.engine import SentinelEngine
 from deadend.guardian.engine import GuardianEngine
+from deadend.guardian.validators.code import CodeValidator
 from deadend.guardian.validators.pii import PIIValidator
 from deadend.guardian.validators.secrets import SecretValidator
-from deadend.guardian.validators.code import CodeValidator
+from deadend.sentinel.engine import SentinelEngine
+from deadend.types import AgentEvent, SessionContext
 from deadend.warden.engine import WardenEngine
 
 logger = structlog.get_logger(__name__)
@@ -67,7 +67,7 @@ class DeadendCrewAIMiddleware:
 
     def __init__(
         self,
-        config: Optional[DeadendConfig] = None,
+        config: DeadendConfig | None = None,
         mode: str = "enforce",
     ) -> None:
         self.mode = mode

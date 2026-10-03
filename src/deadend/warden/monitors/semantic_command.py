@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import structlog
 
-from deadend.types import AgentEvent, SessionContext, DetectionResult, ThreatSeverity, ThreatType
+from deadend.types import AgentEvent, DetectionResult, SessionContext, ThreatSeverity, ThreatType
 from deadend.warden.monitors.base import BaseMonitor
 
 logger = structlog.get_logger(__name__)
@@ -49,8 +49,8 @@ class SemanticCommandMonitor(BaseMonitor):
         self._load_attempted = False
 
         try:
-            import transformers  # noqa: F401
             import torch  # noqa: F401
+            import transformers  # noqa: F401
             self._ml_available = True
         except ImportError:
             logger.info(

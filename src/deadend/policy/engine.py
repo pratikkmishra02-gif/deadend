@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-from typing import List, Optional
 import structlog
 
 from deadend.policy.models import SecurityPolicy
-from deadend.types import DetectionResult, ActionType, ThreatSeverity, SessionContext
+from deadend.types import ActionType, DetectionResult, SessionContext, ThreatSeverity
 
 logger = structlog.get_logger(__name__)
 
@@ -14,7 +13,7 @@ class PolicyEngine:
     def __init__(self, policy: SecurityPolicy) -> None:
         self.policy = policy
 
-    def evaluate(self, detection: DetectionResult) -> List[ActionType]:
+    def evaluate(self, detection: DetectionResult) -> list[ActionType]:
         """Maps threat severity to configured actions based on the policy."""
         if self.policy.mode == 'disabled':
             return [ActionType.ALLOW]
@@ -27,7 +26,7 @@ class PolicyEngine:
         
         return actions
 
-    def get_actions_for_severity(self, severity: ThreatSeverity) -> List[ActionType]:
+    def get_actions_for_severity(self, severity: ThreatSeverity) -> list[ActionType]:
         """Returns the configured actions for a given severity."""
         actions = self.policy.actions
         if severity == ThreatSeverity.CRITICAL:
@@ -52,7 +51,7 @@ class PolicyEngine:
 
         return tool_name in allowed_tools
 
-    def check_resource_limits(self, session: SessionContext) -> Optional[DetectionResult]:
+    def check_resource_limits(self, session: SessionContext) -> DetectionResult | None:
         """Checks if a session exceeds configured resource limits."""
         if self.policy.mode == 'disabled':
             return None

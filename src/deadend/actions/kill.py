@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from deadend.types import ActionType, DetectionResult, SessionContext
+
 from .base import BaseAction
 
 __all__ = ["KillAction"]

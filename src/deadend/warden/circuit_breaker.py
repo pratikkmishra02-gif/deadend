@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import time
 from enum import Enum
-from typing import Dict
+
 from pydantic import BaseModel
 
 from deadend.types import DetectionResult
@@ -32,7 +32,7 @@ class CircuitBreaker:
         self.trip_threshold = trip_threshold
         self.reset_timeout_seconds = reset_timeout_seconds
         self.half_open_max_calls = half_open_max_calls
-        self._sessions: Dict[str, SessionState] = {}
+        self._sessions: dict[str, SessionState] = {}
         
     def _get_session(self, session_id: str) -> SessionState:
         if session_id not in self._sessions:

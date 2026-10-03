@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from typing import Optional
-
 from deadend.types import ActionType, DetectionResult, SessionContext
+
 from .base import BaseAction
 
 __all__ = ["AlertAction"]
@@ -11,7 +10,7 @@ __all__ = ["AlertAction"]
 class AlertAction(BaseAction):
     """Sends alerts via webhooks."""
 
-    def __init__(self, webhook_url: Optional[str] = None, channels: list[str] | None = None) -> None:
+    def __init__(self, webhook_url: str | None = None, channels: list[str] | None = None) -> None:
         self.webhook_url = webhook_url
         self.channels = channels or []
 

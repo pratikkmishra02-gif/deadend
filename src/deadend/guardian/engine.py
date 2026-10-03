@@ -2,10 +2,9 @@ from __future__ import annotations
 
 import asyncio
 import time
-from typing import Optional
 
-from deadend.types import ScanResult, SessionContext, ScanPhase
 from deadend.guardian.validators.base import BaseValidator
+from deadend.types import ScanPhase, ScanResult, SessionContext
 
 __all__ = ["GuardianEngine"]
 
@@ -24,7 +23,7 @@ class GuardianEngine:
         self.validators = validators or []
         self.parallel = parallel
 
-    async def validate(self, text: str, context: Optional[SessionContext] = None) -> ScanResult:
+    async def validate(self, text: str, context: SessionContext | None = None) -> ScanResult:
         """
         Validate text against all enabled validators.
 

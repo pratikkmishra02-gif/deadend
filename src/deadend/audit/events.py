@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field
 
-from deadend.types import ThreatSeverity, ActionType, ScanResult, ModuleType
+from deadend.types import ActionType, ModuleType, ThreatSeverity
 
 __all__ = ["AuditEvent"]
 
@@ -19,15 +19,15 @@ class AuditEvent(BaseModel):
     agent_id: str = 'default'
     event_type: str
     module: ModuleType
-    severity: Optional[ThreatSeverity] = None
+    severity: ThreatSeverity | None = None
     details: dict[str, Any] = Field(default_factory=dict)
-    scan_result: Optional[Any] = None
-    action_taken: Optional[ActionType] = None
-    latency_ms: Optional[float] = None
-    policy_name: Optional[str] = None
+    scan_result: Any | None = None
+    action_taken: ActionType | None = None
+    latency_ms: float | None = None
+    policy_name: str | None = None
     context: dict[str, Any] = Field(default_factory=dict)
-    previous_hash: Optional[str] = None
-    hash: Optional[str] = None
+    previous_hash: str | None = None
+    hash: str | None = None
 
     model_config = {
         "arbitrary_types_allowed": True

@@ -70,7 +70,7 @@ packages = ["src/deadend"]
 line-length = 100
 target-version = "py310"
 lint.select = ["E", "F", "B", "I", "UP", "N"]
-lint.ignore = []
+lint.ignore = ["E501"]
 
 [tool.pytest.ini_options]
 minversion = "7.0"

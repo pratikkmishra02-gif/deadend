@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Any, Optional
-
 __all__ = [
     "DeadendError",
     "ConfigurationError",
@@ -62,8 +60,8 @@ class ThreatDetectedError(DeadendError):
     def __init__(
         self,
         message: str,
-        threat_type: Optional[str] = None,
-        severity: Optional[str] = None,
+        threat_type: str | None = None,
+        severity: str | None = None,
         confidence: float = 0.0,
         details: str = "",
         detector_name: str = "unknown",

@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import math
 import re
-from typing import Optional
 
 from deadend.types import DetectionResult, SessionContext, ThreatSeverity, ThreatType
+
 from .base import BaseValidator
 
 __all__ = ["SecretValidator"]
@@ -40,7 +40,7 @@ class SecretValidator(BaseValidator):
     def name(self) -> str:
         return 'secret_validator'
 
-    async def validate(self, text: str, context: Optional[SessionContext] = None) -> DetectionResult:
+    async def validate(self, text: str, context: SessionContext | None = None) -> DetectionResult:
         findings = []
         
         if AWS_ACCESS_KEY.search(text):

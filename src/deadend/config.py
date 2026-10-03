@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-from typing import Any, Dict, List, Literal, Optional
+from typing import Any, Literal
 
 import yaml
 from pydantic import BaseModel, ConfigDict, Field
@@ -30,7 +30,7 @@ class SentinelConfig(BaseModel):
     encoding_detection: bool = True
     canary_tokens: bool = True
     max_prompt_length: int = 100000
-    blocked_topics: List[str] = Field(default_factory=list)
+    blocked_topics: list[str] = Field(default_factory=list)
 
 
 class WardenConfig(BaseModel):
@@ -38,8 +38,8 @@ class WardenConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     enabled: bool = True
-    allowed_tools: List[str] = Field(default_factory=lambda: ["*"])
-    denied_patterns: List[str] = Field(default_factory=list)
+    allowed_tools: list[str] = Field(default_factory=lambda: ["*"])
+    denied_patterns: list[str] = Field(default_factory=list)
     max_agent_depth: int = 5
     max_loop_iterations: int = 10
     max_tokens_per_session: int = 500000
@@ -80,10 +80,10 @@ class AlertConfig(BaseModel):
     """Configuration for alerting integrations."""
     model_config = ConfigDict(extra="allow")
 
-    slack_webhook: Optional[str] = None
-    pagerduty_key: Optional[str] = None
-    email: Optional[str] = None
-    custom_webhooks: List[str] = Field(default_factory=list)
+    slack_webhook: str | None = None
+    pagerduty_key: str | None = None
+    email: str | None = None
+    custom_webhooks: list[str] = Field(default_factory=list)
 
 
 class DeadendConfig(BaseModel):
@@ -94,7 +94,7 @@ class DeadendConfig(BaseModel):
     sentinel: SentinelConfig = Field(default_factory=SentinelConfig)
     warden: WardenConfig = Field(default_factory=WardenConfig)
     guardian: GuardianConfig = Field(default_factory=GuardianConfig)
-    policy_path: Optional[str] = None
+    policy_path: str | None = None
     audit: AuditConfig = Field(default_factory=AuditConfig)
     alerts: AlertConfig = Field(default_factory=AlertConfig)
 
@@ -109,7 +109,7 @@ def get_default_config() -> DeadendConfig:
     return DeadendConfig()
 
 
-def load_config(config_source: Optional[str | Dict[str, Any]] = None) -> DeadendConfig:
+def load_config(config_source: str | dict[str, Any] | None = None) -> DeadendConfig:
     """
     Load the Deadend configuration from a file path, dictionary, or environment.
 
@@ -128,7 +128,7 @@ def load_config(config_source: Optional[str | Dict[str, Any]] = None) -> Deadend
     Raises:
         ConfigurationError: If the configuration file cannot be read or parsed.
     """
-    config_dict: Dict[str, Any] = {}
+    config_dict: dict[str, Any] = {}
 
     if isinstance(config_source, dict):
         config_dict = config_source
@@ -143,7 +143,7 @@ def load_config(config_source: Optional[str | Dict[str, Any]] = None) -> Deadend
 
         if path_to_load:
             try:
-                with open(path_to_load, "r", encoding="utf-8") as f:
+                with open(path_to_load, encoding="utf-8") as f:
                     loaded = yaml.safe_load(f)
                     if loaded and isinstance(loaded, dict):
                         config_dict = loaded

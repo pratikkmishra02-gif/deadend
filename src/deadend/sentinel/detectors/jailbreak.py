@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import re
-from typing import Optional
 
-from deadend.types import DetectionResult, SessionContext, ThreatType, ThreatSeverity
 from deadend.sentinel.detectors.base import BaseDetector
 from deadend.sentinel.signatures.known_attacks import JAILBREAK_PATTERNS
+from deadend.types import DetectionResult, SessionContext, ThreatSeverity, ThreatType
+
 
 class JailbreakDetector(BaseDetector):
     """Detects jailbreak attempts using known signatures and structural analysis."""
@@ -20,7 +20,7 @@ class JailbreakDetector(BaseDetector):
     def name(self) -> str:
         return 'jailbreak_detector'
 
-    async def detect(self, text: str, context: Optional[SessionContext] = None) -> DetectionResult:
+    async def detect(self, text: str, context: SessionContext | None = None) -> DetectionResult:
         matched_signatures = []
         max_severity = ThreatSeverity.LOW
         

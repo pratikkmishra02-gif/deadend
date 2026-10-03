@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 import re
-from typing import Optional
 
-from deadend.types import DetectionResult, SessionContext, ThreatType, ThreatSeverity, AgentEvent
 from deadend.sentinel.detectors.base import BaseDetector
+from deadend.types import DetectionResult, SessionContext, ThreatSeverity, ThreatType
+
 
 class SemanticDriftDetector(BaseDetector):
     """Tracks conversation trajectory for multi-turn attacks or topic escalation."""
@@ -28,7 +28,7 @@ class SemanticDriftDetector(BaseDetector):
         words = re.findall(r'\b[a-zA-Z]{4,}\b', text.lower())
         return set(words)
 
-    async def detect(self, text: str, context: Optional[SessionContext] = None) -> DetectionResult:
+    async def detect(self, text: str, context: SessionContext | None = None) -> DetectionResult:
         if not context or not context.events:
             # No context means no drift can be detected
             return DetectionResult(

@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from typing import Dict
-from deadend.types import AgentState
 from deadend.exceptions import DeadendError
+from deadend.types import AgentState
 
 __all__ = ["AgentStateMachine"]
 
@@ -21,7 +20,7 @@ class AgentStateMachine:
     }
     
     def __init__(self):
-        self._states: Dict[str, AgentState] = {}
+        self._states: dict[str, AgentState] = {}
         
     def validate_transition(self, from_state: AgentState, to_state: AgentState) -> bool:
         """Validates if a transition is allowed."""

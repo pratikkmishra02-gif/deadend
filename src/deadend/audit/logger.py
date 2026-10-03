@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import json
 import logging
-from typing import Any
 
 import structlog
 
-from deadend.types import ScanResult, DetectionResult, ActionType, ScanPhase, ModuleType
+from deadend.types import ActionType, DetectionResult, ModuleType, ScanPhase, ScanResult
+
 from .events import AuditEvent
 
 __all__ = ["AuditLogger"]

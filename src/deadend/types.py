@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
 from uuid import uuid4
 
 from pydantic import BaseModel, ConfigDict, Field, confloat
@@ -108,12 +108,12 @@ class DetectionResult(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     detected: bool
-    threat_type: Optional[ThreatType] = None
+    threat_type: ThreatType | None = None
     severity: ThreatSeverity
     confidence: confloat(ge=0.0, le=1.0) = 0.0  # type: ignore
     details: Any = ""
     detector_name: str = "unknown"
-    metadata: Dict[str, Any] = Field(default_factory=dict)
+    metadata: dict[str, Any] = Field(default_factory=dict)
     timestamp: datetime = Field(default_factory=_now)
 
 
@@ -123,10 +123,10 @@ class ScanResult(BaseModel):
 
     passed: bool
     phase: ScanPhase
-    detections: List[DetectionResult] = Field(default_factory=list)
+    detections: list[DetectionResult] = Field(default_factory=list)
     action_taken: ActionType = ActionType.ALLOW
     latency_ms: float = 0.0
-    metadata: Dict[str, Any] = Field(default_factory=dict)
+    metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 class AgentEvent(BaseModel):
@@ -139,10 +139,10 @@ class AgentEvent(BaseModel):
     timestamp: datetime = Field(default_factory=_now)
     event_type: str
     content: str = ""
-    tool_name: Optional[str] = None
-    tool_args: Optional[Dict[str, Any]] = None
-    parent_event_id: Optional[str] = None
-    metadata: Dict[str, Any] = Field(default_factory=dict)
+    tool_name: str | None = None
+    tool_args: dict[str, Any] | None = None
+    parent_event_id: str | None = None
+    metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 class ToolCall(BaseModel):
@@ -150,7 +150,7 @@ class ToolCall(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     tool_name: str
-    arguments: Dict[str, Any] = Field(default_factory=dict)
+    arguments: dict[str, Any] = Field(default_factory=dict)
     agent_id: str = "default"
     session_id: str = ""
     timestamp: datetime = Field(default_factory=_now)
@@ -164,13 +164,13 @@ class SessionContext(BaseModel):
     agent_id: str = "default"
     model: str = "unknown"
     framework: str = "unknown"
-    events: List[AgentEvent] = Field(default_factory=list)
-    tool_calls: List[ToolCall] = Field(default_factory=list)
+    events: list[AgentEvent] = Field(default_factory=list)
+    tool_calls: list[ToolCall] = Field(default_factory=list)
     start_time: datetime = Field(default_factory=_now)
     total_tokens: int = 0
     total_cost_usd: float = 0.0
     violation_count: int = 0
-    metadata: Dict[str, Any] = Field(default_factory=dict)
+    metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 class ThreatIntelligence(BaseModel):
@@ -182,6 +182,6 @@ class ThreatIntelligence(BaseModel):
     description: str
     severity: ThreatSeverity
     source: str = "builtin"
-    cve_ids: List[str] = Field(default_factory=list)
-    mitre_ids: List[str] = Field(default_factory=list)
-    first_seen: Optional[datetime] = None
+    cve_ids: list[str] = Field(default_factory=list)
+    mitre_ids: list[str] = Field(default_factory=list)
+    first_seen: datetime | None = None

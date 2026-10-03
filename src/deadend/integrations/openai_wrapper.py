@@ -20,22 +20,21 @@ Usage::
 from __future__ import annotations
 
 import asyncio
-import functools
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import structlog
 
 from deadend.config import DeadendConfig
-from deadend.types import (
-    AgentEvent, SessionContext, ScanPhase,
-    ThreatSeverity, ActionType,
-)
 from deadend.exceptions import ThreatDetectedError
-from deadend.sentinel.engine import SentinelEngine
 from deadend.guardian.engine import GuardianEngine
+from deadend.guardian.validators.code import CodeValidator
 from deadend.guardian.validators.pii import PIIValidator
 from deadend.guardian.validators.secrets import SecretValidator
-from deadend.guardian.validators.code import CodeValidator
+from deadend.sentinel.engine import SentinelEngine
+from deadend.types import (
+    AgentEvent,
+    SessionContext,
+)
 from deadend.warden.engine import WardenEngine
 
 logger = structlog.get_logger(__name__)
@@ -46,13 +45,13 @@ __all__ = ["SecureOpenAI"]
 class _SecureChatCompletions:
     """Wraps ``openai.chat.completions`` with Deadend scanning."""
 
-    def __init__(self, original_chat_completions: Any, shield: "_DeadendShieldLayer") -> None:
+    def __init__(self, original_chat_completions: Any, shield: _DeadendShieldLayer) -> None:
         self._original = original_chat_completions
         self._shield = shield
 
     def create(self, **kwargs: Any) -> Any:
         """Intercept chat.completions.create() with security scanning."""
-        messages: List[Dict[str, Any]] = kwargs.get("messages", [])
+        messages: list[dict[str, Any]] = kwargs.get("messages", [])
 
         # ── 1. Sentinel: Scan the last user message ──
         user_messages = [m for m in messages if m.get("role") == "user"]
@@ -127,14 +126,14 @@ class _SecureChatCompletions:
 class _SecureChat:
     """Wraps ``openai.chat`` namespace."""
 
-    def __init__(self, original_chat: Any, shield: "_DeadendShieldLayer") -> None:
+    def __init__(self, original_chat: Any, shield: _DeadendShieldLayer) -> None:
         self.completions = _SecureChatCompletions(original_chat.completions, shield)
 
 
 class _DeadendShieldLayer:
     """Internal shield layer shared across all wrappers."""
 
-    def __init__(self, config: Optional[DeadendConfig] = None, mode: str = "enforce") -> None:
+    def __init__(self, config: DeadendConfig | None = None, mode: str = "enforce") -> None:
         self.config = config or DeadendConfig()
         self.mode = mode
         self.sentinel = SentinelEngine()
@@ -193,7 +192,7 @@ class SecureOpenAI:
 
     def __init__(
         self,
-        deadend_config: Optional[DeadendConfig] = None,
+        deadend_config: DeadendConfig | None = None,
         deadend_mode: str = "enforce",
         **openai_kwargs: Any,
     ) -> None:

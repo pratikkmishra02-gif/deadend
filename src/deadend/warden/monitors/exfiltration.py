@@ -1,7 +1,8 @@
 from __future__ import annotations
+
 import re
 
-from deadend.types import AgentEvent, SessionContext, DetectionResult, ThreatSeverity, ThreatType
+from deadend.types import AgentEvent, DetectionResult, SessionContext, ThreatSeverity, ThreatType
 from deadend.warden.monitors.base import BaseMonitor
 
 __all__ = ["ExfiltrationMonitor"]
@@ -50,7 +51,7 @@ class ExfiltrationMonitor(BaseMonitor):
                     threat_type=ThreatType.DATA_EXFILTRATION,
                     severity=ThreatSeverity.CRITICAL,
                     confidence=0.9,
-                    details=f"Sensitive data pattern detected."
+                    details="Sensitive data pattern detected."
                 )
                 
         words = args_str.split()
@@ -61,7 +62,7 @@ class ExfiltrationMonitor(BaseMonitor):
                     threat_type=ThreatType.DATA_EXFILTRATION,
                     severity=ThreatSeverity.MEDIUM,
                     confidence=0.6,
-                    details=f"Large base64 encoded string detected."
+                    details="Large base64 encoded string detected."
                 )
                 
         return DetectionResult(detected=False, threat_type=ThreatType.TOOL_ABUSE, severity=ThreatSeverity.LOW, confidence=0.0)

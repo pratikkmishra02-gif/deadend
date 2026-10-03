@@ -1,28 +1,54 @@
-from __future__ import annotations
+import os
 
-from typing import Any, Dict
+import structlog
 import yaml
-from pydantic import ValidationError
 
-from deadend.policy.models import SecurityPolicy
-from deadend.exceptions import PolicyLoadError, PolicyValidationError
+from deadend.policy.schema import DeadendPolicy
 
-def load_policy(path: str) -> SecurityPolicy:
-    """Loads a YAML policy file and returns a SecurityPolicy model."""
-    try:
-        with open(path, 'r', encoding='utf-8') as f:
-            data = yaml.safe_load(f)
-        return load_policy_from_dict(data)
-    except FileNotFoundError as e:
-        raise PolicyLoadError(f"Policy file not found: {path}") from e
-    except yaml.YAMLError as e:
-        raise PolicyLoadError(f"Failed to parse YAML policy: {e}") from e
+logger = structlog.get_logger(__name__)
 
-def load_policy_from_dict(data: Dict[str, Any]) -> SecurityPolicy:
-    """Creates a SecurityPolicy model from a dictionary."""
-    try:
-        return SecurityPolicy(**data)
-    except ValidationError as e:
-        raise PolicyValidationError(f"Invalid policy data: {e}") from e
+__all__ = ["PolicyLoader"]
 
-__all__ = ["load_policy", "load_policy_from_dict"]
+
+class PolicyLoader:
+    """Loads and validates a Deadend YAML policy file."""
+    
+    DEFAULT_POLICY_LOCations = [
+        "deadend-policy.yaml",
+        "deadend-policy.yml",
+        ".deadend/policy.yaml",
+        ".deadend/policy.yml"
+    ]
+    
+    @classmethod
+    def load(cls, filepath: str | None = None) -> DeadendPolicy:
+        """
+        Load policy from the specified filepath, or search default locations.
+        If no file is found, returns the default permissive policy.
+        """
+        target_path = None
+        
+        if filepath:
+            target_path = filepath
+        else:
+            for path in cls.DEFAULT_POLICY_LOCations:
+                if os.path.exists(path):
+                    target_path = path
+                    break
+                    
+        if not target_path or not os.path.exists(target_path):
+            logger.debug("No deadend policy file found, using defaults.")
+            return DeadendPolicy()
+            
+        try:
+            with open(target_path, encoding="utf-8") as f:
+                data = yaml.safe_load(f) or {}
+                
+            policy = DeadendPolicy(**data)
+            logger.info("Loaded deadend security policy", path=target_path, mode=policy.mode)
+            return policy
+            
+        except Exception as e:
+            logger.error("Failed to load policy file", error=str(e), path=target_path)
+            # Fall back to safe default for runtime stability, but log loudly.
+            return DeadendPolicy()

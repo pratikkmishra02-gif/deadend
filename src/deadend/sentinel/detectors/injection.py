@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import re
-from typing import Optional
 
-from deadend.types import DetectionResult, SessionContext, ThreatType, ThreatSeverity
 from deadend.sentinel.detectors.base import BaseDetector
 from deadend.sentinel.signatures.known_attacks import INJECTION_PATTERNS
+from deadend.types import DetectionResult, SessionContext, ThreatSeverity, ThreatType
+
 
 class InjectionDetector(BaseDetector):
     """Detects prompt injection attacks using patterns and heuristics."""
@@ -40,7 +40,7 @@ class InjectionDetector(BaseDetector):
             
         return min(1.0, score)
 
-    async def detect(self, text: str, context: Optional[SessionContext] = None) -> DetectionResult:
+    async def detect(self, text: str, context: SessionContext | None = None) -> DetectionResult:
         matched_signatures = []
         max_severity = ThreatSeverity.LOW
         

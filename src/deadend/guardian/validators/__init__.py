@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from .base import BaseValidator
+from .code import CodeValidator
 from .pii import PIIValidator
 from .secrets import SecretValidator
-from .code import CodeValidator
 from .toxicity import ToxicityValidator
 
 __all__ = [

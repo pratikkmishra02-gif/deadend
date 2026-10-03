@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import re
-from typing import Optional
 
-from deadend.types import DetectionResult, SessionContext, ThreatType, ThreatSeverity
 from deadend.sentinel.detectors.base import BaseDetector
 from deadend.sentinel.signatures.known_attacks import INDIRECT_PATTERNS
+from deadend.types import DetectionResult, SessionContext, ThreatSeverity, ThreatType
+
 
 class IndirectInjectionDetector(BaseDetector):
     """Detects hidden instructions in retrieved documents or contextual data."""
@@ -20,7 +20,7 @@ class IndirectInjectionDetector(BaseDetector):
     def name(self) -> str:
         return 'indirect_injection_detector'
 
-    async def detect(self, text: str, context: Optional[SessionContext] = None) -> DetectionResult:
+    async def detect(self, text: str, context: SessionContext | None = None) -> DetectionResult:
         flags = []
         max_severity = ThreatSeverity.LOW
 

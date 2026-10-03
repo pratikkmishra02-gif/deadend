@@ -2,19 +2,21 @@ from __future__ import annotations
 
 import functools
 import inspect
-from typing import Any, Callable, Optional, Literal
+from collections.abc import Callable
+from typing import Any, Literal
+
 import structlog
 
-from deadend.shield.shield import Shield
 from deadend.exceptions import ThreatDetectedError
+from deadend.shield.shield import Shield
 
 logger = structlog.get_logger(__name__)
 
 def shield(
-    config: Optional[Any] = None,
-    policy: Optional[str] = None,
+    config: Any | None = None,
+    policy: str | None = None,
     on_threat: Literal['raise', 'block', 'warn', 'log'] = 'raise',
-    session_id: Optional[str] = None
+    session_id: str | None = None
 ) -> Callable:
     """Decorator to protect a function with Shield.protect()."""
     shield_instance = Shield(config=config, policy_path=policy)
@@ -53,7 +55,7 @@ def shield(
 
     return decorator
 
-def monitor(config: Optional[Any] = None) -> Callable:
+def monitor(config: Any | None = None) -> Callable:
     """Lighter decorator that only monitors and logs."""
     return shield(config=config, on_threat='log')
 

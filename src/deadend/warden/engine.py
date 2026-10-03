@@ -1,29 +1,39 @@
 from __future__ import annotations
-import time
-from typing import List, Optional
 
-from deadend.types import AgentEvent, SessionContext, DetectionResult, ScanResult, ScanPhase, ToolCall, AgentState, ThreatSeverity, ThreatType, ActionType
+import time
+
 from deadend.exceptions import CircuitBreakerOpenError
+from deadend.types import (
+    ActionType,
+    AgentEvent,
+    AgentState,
+    DetectionResult,
+    ScanPhase,
+    ScanResult,
+    SessionContext,
+    ThreatSeverity,
+    ToolCall,
+)
 from deadend.warden.circuit_breaker import CircuitBreaker
-from deadend.warden.state_machine import AgentStateMachine
 from deadend.warden.monitors.base import BaseMonitor
-from deadend.warden.monitors.tool_abuse import ToolAbuseMonitor
+from deadend.warden.monitors.coordination import CoordinationMonitor
 from deadend.warden.monitors.escalation import EscalationMonitor
 from deadend.warden.monitors.exfiltration import ExfiltrationMonitor
+from deadend.warden.monitors.intent_drift import IntentDriftMonitor
+from deadend.warden.monitors.network import NetworkMonitor
 from deadend.warden.monitors.recursion import RecursionMonitor
 from deadend.warden.monitors.resource import ResourceMonitor
-from deadend.warden.monitors.network import NetworkMonitor
-from deadend.warden.monitors.coordination import CoordinationMonitor
-from deadend.warden.monitors.intent_drift import IntentDriftMonitor
-from deadend.warden.monitors.supply_chain import SupplyChainMonitor
 from deadend.warden.monitors.semantic_command import SemanticCommandMonitor
+from deadend.warden.monitors.supply_chain import SupplyChainMonitor
+from deadend.warden.monitors.tool_abuse import ToolAbuseMonitor
+from deadend.warden.state_machine import AgentStateMachine
 
 __all__ = ["WardenEngine"]
 
 class WardenEngine:
     """Orchestrates all monitors and circuit breaker."""
     
-    def __init__(self, monitors: Optional[List[BaseMonitor]] = None, circuit_breaker: Optional[CircuitBreaker] = None):
+    def __init__(self, monitors: list[BaseMonitor] | None = None, circuit_breaker: CircuitBreaker | None = None):
         if monitors is None:
             self.monitors = [
                 ToolAbuseMonitor(),
@@ -48,7 +58,7 @@ class WardenEngine:
         if not self.circuit_breaker.can_proceed(session.session_id):
             raise CircuitBreakerOpenError(f"Circuit breaker is OPEN for session {session.session_id}")
             
-        detections: List[DetectionResult] = []
+        detections: list[DetectionResult] = []
         start_time = time.time()
         
         for monitor in self.monitors:

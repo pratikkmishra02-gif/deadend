@@ -14,12 +14,10 @@ itself and returns no detections (graceful degradation).
 """
 from __future__ import annotations
 
-from typing import Optional
-
 import structlog
 
-from deadend.types import DetectionResult, SessionContext, ThreatType, ThreatSeverity
 from deadend.sentinel.detectors.base import BaseDetector
+from deadend.types import DetectionResult, SessionContext, ThreatSeverity, ThreatType
 
 logger = structlog.get_logger(__name__)
 
@@ -50,8 +48,8 @@ class SemanticInjectionDetector(BaseDetector):
         self._load_attempted = False
 
         try:
-            import transformers  # noqa: F401
             import torch  # noqa: F401
+            import transformers  # noqa: F401
             self._ml_available = True
         except ImportError:
             logger.info(
@@ -92,7 +90,7 @@ class SemanticInjectionDetector(BaseDetector):
                 self._ml_available = False
 
     async def detect(
-        self, text: str, context: Optional[SessionContext] = None
+        self, text: str, context: SessionContext | None = None
     ) -> DetectionResult:
         """Run semantic classification on the input text.
 

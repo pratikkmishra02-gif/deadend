@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from deadend.types import AgentEvent, SessionContext, DetectionResult, ThreatSeverity, ThreatType
+from deadend.types import AgentEvent, DetectionResult, SessionContext, ThreatSeverity, ThreatType
 from deadend.warden.monitors.base import BaseMonitor
 
 __all__ = ["CoordinationMonitor"]
@@ -35,7 +35,7 @@ class CoordinationMonitor(BaseMonitor):
                 threat_type=ThreatType.AGENT_COORDINATION,
                 severity=ThreatSeverity.MEDIUM,
                 confidence=0.7,
-                details=f"High inter-agent messaging detected."
+                details="High inter-agent messaging detected."
             )
             
         return DetectionResult(detected=False, threat_type=ThreatType.TOOL_ABUSE, severity=ThreatSeverity.LOW, confidence=0.0)
