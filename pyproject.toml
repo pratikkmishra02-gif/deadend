@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "phalanx-ai"
+name = "deadend"
 version = "0.1.0"
 description = "Runtime AI security for the enterprise — the interlocked shield for AI agents"
 readme = "README.md"
