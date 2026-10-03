@@ -1,0 +1,21 @@
+api_version: phalanx/v1
+metadata:
+  name: enterprise
+  description: Strict enterprise policy
+mode: enforce
+sentinel:
+  injection_detection: strict
+  jailbreak_detection: strict
+warden:
+  network:
+    denied_outbound:
+      - "*"
+  resources:
+    max_tokens_per_session: 50000
+    max_cost_per_session_usd: 5.0
+guardian:
+  pii_detection: true
+actions:
+  on_medium:
+    - BLOCK
+    - ALERT

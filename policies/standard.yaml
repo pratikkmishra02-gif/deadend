@@ -1,0 +1,8 @@
+api_version: phalanx/v1
+metadata:
+  name: standard
+  description: Standard moderate policy
+mode: enforce
+sentinel:
+  injection_detection: moderate
+  jailbreak_detection: moderate

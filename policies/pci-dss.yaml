@@ -1,0 +1,70 @@
+# PCI-DSS Compliant Security Policy for Phalanx AI
+# ===================================================
+# Designed for fintech/payment applications handling cardholder data.
+# Enforces strict secret detection, credit card masking, and network isolation.
+
+api_version: phalanx/v1
+metadata:
+  name: pci-dss
+  version: "1.0"
+  description: "PCI-DSS compliant policy for payment and fintech AI applications"
+  author: "Phalanx AI Team"
+
+mode: enforce
+
+sentinel:
+  injection_detection: strict
+  jailbreak_detection: strict
+  encoding_detection: true
+  canary_tokens: true
+  max_prompt_length: 4096
+  blocked_topics:
+    - credit_card_generation
+    - payment_bypass
+    - fraud_instructions
+
+warden:
+  network:
+    allowed_outbound:
+      - "api.openai.com"
+      - "api.anthropic.com"
+    denied_outbound:
+      - "*"
+    max_payload_size_kb: 5
+  resources:
+    max_tokens_per_session: 20000
+    max_cost_per_session_usd: 1.0
+    max_api_calls_per_minute: 15
+    max_agent_depth: 2
+    max_concurrent_agents: 2
+    max_consecutive_tool_calls: 5
+  block_privilege_escalation: true
+  block_lateral_movement: true
+  block_data_exfiltration: true
+  block_self_modification: true
+
+guardian:
+  pii_detection: true
+  secret_detection: true
+  code_validation: true
+  toxicity_check: false
+  max_output_length: 4096
+  redaction_strategy: mask
+  mask_char: "X"
+
+actions:
+  on_critical:
+    - BLOCK
+    - KILL
+    - ALERT
+  on_high:
+    - BLOCK
+    - ALERT
+  on_medium:
+    - BLOCK
+    - ALERT
+  on_low:
+    - WARN
+    - ALERT
+  on_info:
+    - ALLOW

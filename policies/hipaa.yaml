@@ -1,0 +1,70 @@
+# HIPAA-Compliant Security Policy for Phalanx AI
+# ================================================
+# Designed for healthcare applications handling PHI (Protected Health Information).
+# Enforces strict PII detection, audit logging, and data exfiltration prevention.
+
+api_version: phalanx/v1
+metadata:
+  name: hipaa
+  version: "1.0"
+  description: "HIPAA-compliant policy for healthcare AI applications"
+  author: "Phalanx AI Team"
+
+mode: enforce
+
+sentinel:
+  injection_detection: strict
+  jailbreak_detection: strict
+  encoding_detection: true
+  canary_tokens: true
+  max_prompt_length: 4096
+  blocked_topics:
+    - patient_diagnosis_override
+    - medication_dosage_change
+    - insurance_fraud
+
+warden:
+  network:
+    allowed_outbound:
+      - "api.openai.com"
+      - "api.anthropic.com"
+    denied_outbound:
+      - "*"
+    max_payload_size_kb: 10
+  resources:
+    max_tokens_per_session: 25000
+    max_cost_per_session_usd: 2.0
+    max_api_calls_per_minute: 20
+    max_agent_depth: 2
+    max_concurrent_agents: 3
+    max_consecutive_tool_calls: 5
+  block_privilege_escalation: true
+  block_lateral_movement: true
+  block_data_exfiltration: true
+  block_self_modification: true
+
+guardian:
+  pii_detection: true
+  secret_detection: true
+  code_validation: true
+  toxicity_check: true
+  max_output_length: 8192
+  redaction_strategy: mask
+  mask_char: "█"
+
+actions:
+  on_critical:
+    - BLOCK
+    - KILL
+    - ALERT
+  on_high:
+    - BLOCK
+    - ALERT
+  on_medium:
+    - BLOCK
+    - ALERT
+  on_low:
+    - WARN
+    - ALERT
+  on_info:
+    - ALLOW

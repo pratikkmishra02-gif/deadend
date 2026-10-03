@@ -1,0 +1,79 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "phalanx-ai"
+version = "0.1.0"
+description = "Runtime AI security for the enterprise — the interlocked shield for AI agents"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "Apache-2.0"}
+authors = [
+    {name = "Pratik Mishra", email = "pratikkmishra02@gmail.com"}
+]
+keywords = [
+    "ai-security", "llm-security", "prompt-injection", "jailbreak-detection",
+    "agent-security", "guardrails", "pii-detection", "runtime-security",
+    "ai-safety", "langchain", "openai", "crewai"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Security",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "pydantic>=2.0",
+    "structlog>=24.0",
+    "pyyaml>=6.0",
+    "regex>=2024.0",
+    "xxhash>=3.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/pratikkmishra02-gif/phalanx-ai"
+Repository = "https://github.com/pratikkmishra02-gif/phalanx-ai"
+Issues = "https://github.com/pratikkmishra02-gif/phalanx-ai/issues"
+Documentation = "https://github.com/pratikkmishra02-gif/phalanx-ai#readme"
+
+[project.optional-dependencies]
+ml = ["scikit-learn", "sentence-transformers"]
+langchain = ["langchain-core>=0.3"]
+openai = ["openai>=1.0"]
+anthropic = ["anthropic>=0.30"]
+google = ["google-generativeai>=0.8"]
+otel = ["opentelemetry-api", "opentelemetry-sdk"]
+all = [
+    "scikit-learn", "sentence-transformers",
+    "langchain-core>=0.3", "openai>=1.0",
+    "anthropic>=0.30", "google-generativeai>=0.8",
+    "opentelemetry-api", "opentelemetry-sdk"
+]
+dev = ["pytest>=7.0", "pytest-asyncio>=0.21", "pytest-cov>=4.0", "ruff>=0.4"]
+
+[project.scripts]
+phalanx = "phalanx_ai.cli.main:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/phalanx_ai"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+lint.select = ["E", "F", "B", "I", "UP", "N"]
+lint.ignore = []
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q"
+testpaths = ["tests"]
+asyncio_mode = "auto"

@@ -1,0 +1,12 @@
+api_version: phalanx/v1
+metadata:
+  name: minimal
+  description: Minimal relaxed policy
+mode: monitor
+sentinel:
+  injection_detection: relaxed
+  jailbreak_detection: relaxed
+guardian:
+  pii_detection: false
+  secret_detection: false
+  toxicity_check: false
