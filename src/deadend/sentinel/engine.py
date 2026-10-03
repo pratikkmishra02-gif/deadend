@@ -14,6 +14,7 @@ from deadend.sentinel.detectors.encoding import EncodingDetector
 from deadend.sentinel.detectors.canary import CanaryDetector
 from deadend.sentinel.detectors.indirect import IndirectInjectionDetector
 from deadend.sentinel.detectors.semantic_drift import SemanticDriftDetector
+from deadend.sentinel.detectors.semantic_injection import SemanticInjectionDetector
 
 logger = structlog.get_logger(__name__)
 
@@ -36,7 +37,8 @@ class SentinelEngine:
                     EncodingDetector(),
                     CanaryDetector(),
                     IndirectInjectionDetector(),
-                    SemanticDriftDetector()
+                    SemanticDriftDetector(),
+                    SemanticInjectionDetector()
                 ]
             }
         else:

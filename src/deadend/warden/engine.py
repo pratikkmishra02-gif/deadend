@@ -16,6 +16,7 @@ from deadend.warden.monitors.network import NetworkMonitor
 from deadend.warden.monitors.coordination import CoordinationMonitor
 from deadend.warden.monitors.intent_drift import IntentDriftMonitor
 from deadend.warden.monitors.supply_chain import SupplyChainMonitor
+from deadend.warden.monitors.semantic_command import SemanticCommandMonitor
 
 __all__ = ["WardenEngine"]
 
@@ -33,7 +34,8 @@ class WardenEngine:
                 NetworkMonitor(),
                 CoordinationMonitor(),
                 IntentDriftMonitor(),
-                SupplyChainMonitor()
+                SupplyChainMonitor(),
+                SemanticCommandMonitor()
             ]
         else:
             self.monitors = monitors
