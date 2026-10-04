@@ -35,6 +35,43 @@ def luhn_check(card_num: str) -> bool:
 
 class PIIValidator(BaseValidator):
     """Detects personally identifiable information in output."""
+    
+    def __init__(self, model_name: str = "dslim/bert-base-NER") -> None:
+        self.model_name = model_name
+        self._pipeline = None
+        self._ml_available = False
+        self._load_attempted = False
+        
+        try:
+            import torch  # noqa: F401
+            import transformers  # noqa: F401
+            self._ml_available = True
+        except ImportError:
+            pass
+
+    def _load_model(self) -> None:
+        if self._load_attempted or not self._ml_available:
+            return
+        self._load_attempted = True
+        
+        import structlog
+        logger = structlog.get_logger(__name__)
+        
+        import warnings
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            from transformers import pipeline as hf_pipeline
+            logger.info("Loading PII NER model...", model=self.model_name)
+            try:
+                self._pipeline = hf_pipeline(
+                    "ner",
+                    model=self.model_name,
+                    device="cpu",
+                    aggregation_strategy="simple"
+                )
+            except Exception as e:
+                logger.error("Failed to load PII model", error=str(e))
+                self._ml_available = False
 
     @property
     def name(self) -> str:
@@ -42,6 +79,18 @@ class PIIValidator(BaseValidator):
 
     async def validate(self, text: str, context: SessionContext | None = None) -> DetectionResult:
         findings = []
+        
+        # ML NER check for Names, Orgs, Locations
+        if self._ml_available:
+            self._load_model()
+            if self._pipeline:
+                try:
+                    entities = self._pipeline(text[:2000])
+                    for ent in entities:
+                        if ent['score'] > 0.85:
+                            findings.append(f"ML Detected: {ent['entity_group']} ({ent['word']})")
+                except Exception:
+                    pass
         
         if SSN_PATTERN.search(text):
             findings.append("SSN detected")
@@ -81,7 +130,23 @@ class PIIValidator(BaseValidator):
     async def redact(self, text: str, mask_char: str = '█') -> str:
         redacted = text
         
-        # Helper to redact matches
+        # ML NER Redaction (do this first)
+        if self._ml_available:
+            self._load_model()
+            if self._pipeline:
+                try:
+                    entities = self._pipeline(text[:2000])
+                    # Sort entities by start index descending to avoid index shifting when replacing
+                    for ent in sorted(entities, key=lambda x: x['start'], reverse=True):
+                        if ent['score'] > 0.85:
+                            start, end = ent['start'], ent['end']
+                            # Mask the exact characters
+                            mask_len = end - start
+                            redacted = redacted[:start] + (mask_char * mask_len) + redacted[end:]
+                except Exception:
+                    pass
+                    
+        # Regex Helper to redact matches
         def replacer(match):
             return mask_char * len(match.group(0))
 
