@@ -49,7 +49,7 @@ from deadend.warden.engine import WardenEngine
 from deadend.policy.models import SecurityPolicy, PolicyMetadata
 from deadend.policy.engine import PolicyEngine
 from deadend.policy.defaults import get_policy
-from deadend.policy.loader import load_policy
+from deadend.policy.loader import PolicyLoader
 
 
 # ═══════════════════════════════════════════════════════════
@@ -451,8 +451,9 @@ class TestPolicyEngine:
             os.path.dirname(__file__), "..", "policies", "enterprise.yaml"
         )
         if os.path.exists(policy_path):
-            policy = load_policy(policy_path)
-            assert isinstance(policy, SecurityPolicy)
+            policy = PolicyLoader.load(policy_path)
+            from deadend.policy.schema import DeadendPolicy
+            assert isinstance(policy, DeadendPolicy)
 
     def test_policy_engine_evaluates_critical(self):
         policy = get_policy("enterprise")
