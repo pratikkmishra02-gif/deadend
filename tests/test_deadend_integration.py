@@ -452,8 +452,8 @@ class TestPolicyEngine:
         )
         if os.path.exists(policy_path):
             policy = PolicyLoader.load(policy_path)
-            from deadend.policy.schema import DeadendPolicy
-            assert isinstance(policy, DeadendPolicy)
+            from deadend.policy.models import SecurityPolicy
+            assert isinstance(policy, SecurityPolicy)
 
     def test_policy_engine_evaluates_critical(self):
         policy = get_policy("enterprise")

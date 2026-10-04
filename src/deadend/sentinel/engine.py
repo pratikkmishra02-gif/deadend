@@ -5,7 +5,7 @@ import time
 
 import structlog
 
-from deadend.policy.schema import SentinelPolicy
+from deadend.policy.models import SentinelPolicy
 from deadend.sentinel.detectors.base import BaseDetector
 from deadend.sentinel.detectors.canary import CanaryDetector
 from deadend.sentinel.detectors.encoding import EncodingDetector

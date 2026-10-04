@@ -3,7 +3,7 @@ import os
 import structlog
 import yaml
 
-from deadend.policy.schema import DeadendPolicy
+from deadend.policy.models import SecurityPolicy
 
 logger = structlog.get_logger(__name__)
 
@@ -21,7 +21,7 @@ class PolicyLoader:
     ]
     
     @classmethod
-    def load(cls, filepath: str | None = None) -> DeadendPolicy:
+    def load(cls, filepath: str | None = None) -> SecurityPolicy:
         """
         Load policy from the specified filepath, or search default locations.
         If no file is found, returns the default permissive policy.
@@ -38,17 +38,18 @@ class PolicyLoader:
                     
         if not target_path or not os.path.exists(target_path):
             logger.debug("No deadend policy file found, using defaults.")
-            return DeadendPolicy()
+            # Note: SecurityPolicy requires metadata. We mock it for the default case.
+            return SecurityPolicy(metadata={"name": "default", "version": "1.0"})
             
         try:
             with open(target_path, encoding="utf-8") as f:
                 data = yaml.safe_load(f) or {}
                 
-            policy = DeadendPolicy(**data)
+            policy = SecurityPolicy(**data)
             logger.info("Loaded deadend security policy", path=target_path, mode=policy.mode)
             return policy
             
         except Exception as e:
             logger.error("Failed to load policy file", error=str(e), path=target_path)
             # Fall back to safe default for runtime stability, but log loudly.
-            return DeadendPolicy()
+            return SecurityPolicy(metadata={"name": "default", "version": "1.0"})

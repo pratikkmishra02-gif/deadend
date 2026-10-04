@@ -1,6 +1,6 @@
 from deadend.policy.loader import PolicyLoader
-from deadend.policy.schema import (
-    DeadendPolicy,
+from deadend.policy.models import (
+    SecurityPolicy,
     DetectorPolicy,
     GuardianPolicy,
     SentinelPolicy,
@@ -8,7 +8,7 @@ from deadend.policy.schema import (
 )
 
 __all__ = [
-    "DeadendPolicy",
+    "SecurityPolicy",
     "SentinelPolicy",
     "WardenPolicy",
     "GuardianPolicy",

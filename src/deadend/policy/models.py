@@ -34,6 +34,11 @@ class ResourcePolicy(BaseModel):
     max_concurrent_agents: int = 5
     max_consecutive_tool_calls: int = 10
 
+class DetectorPolicy(BaseModel):
+    enabled: bool = True
+    threshold: float | None = None
+    sensitivity: float | None = None
+
 class SentinelPolicy(BaseModel):
     injection_detection: Literal['strict','moderate','relaxed'] = 'strict'
     jailbreak_detection: Literal['strict','moderate','relaxed'] = 'strict'
@@ -41,6 +46,7 @@ class SentinelPolicy(BaseModel):
     canary_tokens: bool = True
     max_prompt_length: int = 8192
     blocked_topics: list[str] = Field(default_factory=list)
+    detectors: dict[str, DetectorPolicy] = Field(default_factory=dict)
 
 class WardenPolicy(BaseModel):
     allowed_tools: list[ToolPolicy] = Field(default_factory=list)
@@ -50,6 +56,7 @@ class WardenPolicy(BaseModel):
     block_lateral_movement: bool = True
     block_data_exfiltration: bool = True
     block_self_modification: bool = True
+    monitors: dict[str, DetectorPolicy] = Field(default_factory=dict)
 
 class GuardianPolicy(BaseModel):
     pii_detection: bool = True
@@ -59,6 +66,7 @@ class GuardianPolicy(BaseModel):
     max_output_length: int = 16384
     redaction_strategy: Literal['mask','remove','hash'] = 'mask'
     mask_char: str = '█'
+    monitors: dict[str, DetectorPolicy] = Field(default_factory=dict)
 
 class ActionPolicy(BaseModel):
     on_critical: list[ActionType] = Field(default_factory=lambda: [ActionType.BLOCK, ActionType.KILL, ActionType.ALERT])

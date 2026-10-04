@@ -3,7 +3,7 @@ from __future__ import annotations
 import time
 
 from deadend.exceptions import CircuitBreakerOpenError
-from deadend.policy.schema import WardenPolicy
+from deadend.policy.models import WardenPolicy
 from deadend.types import (
     ActionType,
     AgentEvent,
