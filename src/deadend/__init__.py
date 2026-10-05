@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Any
 
 from deadend._version import __version__
 from deadend.config import DeadendConfig
+from deadend.context import ContextEngine, ContextWiki
 from deadend.types import (
     ActionType,
     DetectionResult,
@@ -47,6 +48,8 @@ class Deadend:
 __all__ = [
     "Deadend",
     "DeadendConfig",
+    "ContextEngine",
+    "ContextWiki",
     "shield",
     "__version__",
     "ThreatSeverity",

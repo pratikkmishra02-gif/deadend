@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "deadend"
-version = "0.3.0"
+version = "0.4.0"
 description = "Runtime AI security for the enterprise — the interlocked shield for AI agents"
 readme = "README.md"
 requires-python = ">=3.10"
